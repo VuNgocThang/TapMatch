@@ -13,7 +13,6 @@ namespace ThangVN
         public LogicUI logicUI;
 
         public Square prefabSquare;
-        public List<int> indexes;
         public List<Sprite> sprites;
         public LayerMask layerMask;
         public List<Square> listGOStored = new List<Square>();
@@ -54,14 +53,49 @@ namespace ThangVN
         }
         void InitSquare()
         {
+            int count = sprites.Count;
+            int countAll = level.listSquareLV.Count;
+            int max = level.max;
+
+            List<int> listRandom = new List<int>();
+            int[] arr = new int[count];
+
+            while (countAll > 0)
+            {
+                int index = Random.Range(0, count);
+
+                if (arr[index] < max)
+                {
+                    arr[index] += 3;
+
+                    for (int y = 0; y < 3; y++)
+                    {
+                        listRandom.Add(index);
+                        countAll--;
+                    }
+                }
+            }
+
+            List<int> list = new List<int>();
+            int r;
+            while (listRandom.Count > 0)
+            {
+                r = Random.Range(0, listRandom.Count);
+                list.Add(listRandom[r]);
+                listRandom.RemoveAt(r);
+            }
+
+            listRandom.AddRange(list);
+
             for (int i = 0; i < level.listSquareLV.Count; i++)
             {
-                level.listSquareLV[i].index = indexes[i];
-                int z = indexes[i];
-                level.listSquareLV[i].image.sprite = sprites[z];
                 listSquaresInGame.Add(level.listSquareLV[i]);
             }
 
+            for (int i = 0; i < listRandom.Count; i++)
+            {
+                listSquaresInGame[i].Init(listRandom[i], sprites[listRandom[i]]);
+            }
         }
 
 
@@ -141,7 +175,7 @@ namespace ThangVN
 
         void CheckEat()
         {
-
+            Tweener tweener = null;
             for (int i = 0; i < listGOStored.Count - 2; i++)
             {
                 if (listGOStored[i].index == listGOStored[i + 1].index && listGOStored[i + 1].index == listGOStored[i + 2].index)
@@ -153,7 +187,7 @@ namespace ThangVN
                     var g2 = listGOStored[i + 1];
                     var g3 = listGOStored[i + 2];
 
-                    g1.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.31f);
+                    tweener = g1.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.31f);
                     g2.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.31f);
                     g3.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.3f)
                        .OnComplete(() =>
@@ -171,11 +205,18 @@ namespace ThangVN
                            listSquareUndo.Remove(g2);
                            listSquareUndo.Remove(g3);
 
-                           CheckDone();
                        });
 
                     i += 2;
                 }
+            }
+
+            if (tweener != null)
+            {
+                tweener.OnComplete(() =>
+                {
+                    CheckDone();
+                });
             }
         }
 

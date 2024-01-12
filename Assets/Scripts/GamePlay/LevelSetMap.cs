@@ -6,5 +6,6 @@ namespace ThangVN
     public class LevelSetMap : MonoBehaviour
     {
         public List<Square> listSquareLV = new List<Square>();
+        public int max;
     }
 }

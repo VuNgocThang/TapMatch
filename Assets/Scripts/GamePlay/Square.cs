@@ -15,6 +15,12 @@ namespace ThangVN
         public SpriteRenderer image;
         public bool canClick;
 
+        public void Init(int i, Sprite sprite)
+        {
+            index = i;
+            image.sprite = sprite;
+        }
+
         public void Move(Transform parent, Action checkEat = null)
         {
             transform.SetParent(parent);
