@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,31 +9,32 @@ namespace ThangVN
 {
     public class LogicUI : MonoBehaviour
     {
-        public Button btnReplay;
-        public Button btnUndo;
-        public Button btnHint;
-        public Button btnShuffle;
+        public static LogicUI Ins;
+        public PanelUIInGame panelUiInGame;
+        public PanelWin panelWin;
+        public PanelLose panelLose;
 
-        public Button btnNewGameWin;
-        public Button btnNewGameLose;
-
-        public GameObject panelWin;
-        public GameObject panelLose;
-
-        private void Start()
+        private void Awake()
         {
-            btnReplay.onClick.AddListener(ReplayGame);
-            btnUndo.onClick.AddListener(LogicGame.Instance.Undo);
-            btnHint.onClick.AddListener(LogicGame.Instance.Hint);
-            btnShuffle.onClick.AddListener(LogicGame.Instance.Shuffle);
-
-            btnNewGameWin.onClick.AddListener(ReplayGame);
-            btnNewGameLose.onClick.AddListener(ReplayGame);
+            Ins = this;
+        }
+      
+        public void ReplayGame()
+        {
+            SceneManager.LoadScene("SceneGameTapMatch");
         }
 
-        void ReplayGame()
+        public void NewGame()
         {
-            SceneManager.LoadScene("SceneGame");
+            panelWin.gameObject.SetActive(false);
+            StartCoroutine(LoadData());
+        }
+
+        IEnumerator LoadData()
+        {
+            yield return new WaitForSeconds(1f);
+            LogicGame.Instance.LoadNewData();
+            Debug.Log("new game!!!");
         }
     }
 }

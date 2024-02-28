@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine;
 
 namespace ThangVN
@@ -44,13 +43,42 @@ namespace ThangVN
         private void Start()
         {
             InitLevel();
-            InitSquare();
         }
         void InitLevel()
         {
             indexLevel = 0;
             level = Instantiate(listLevel[0], transform);
+            InitSquare();
         }
+
+        public void LoadNewData()
+        {
+            ResetStateNewGame();
+            ClearGOCrrLevel();
+            LoadNewLevel();
+        }
+
+        void ResetStateNewGame()
+        {
+            checkWin = false;
+            checkLose = false;
+        }
+
+        void ClearGOCrrLevel()
+        {
+            if (level != null)
+            {
+                level.gameObject.SetActive(false);
+            }
+        }
+
+        void LoadNewLevel()
+        {
+            indexLevel ++;
+            level = Instantiate(listLevel[indexLevel], transform);
+            InitSquare();
+        }
+
         void InitSquare()
         {
             int count = sprites.Count;
@@ -237,7 +265,7 @@ namespace ThangVN
 
             Debug.Log("you lose");
             checkLose = true;
-            logicUI.panelLose.SetActive(true);
+            LogicUI.Ins.panelLose.gameObject.SetActive(true);
         }
 
         void CheckWin()
@@ -246,7 +274,7 @@ namespace ThangVN
             {
                 Debug.Log("you Win");
                 checkWin = true;
-                logicUI.panelWin.SetActive(true);
+                LogicUI.Ins.panelWin.gameObject.SetActive(true);
             }
         }
 
@@ -404,6 +432,8 @@ namespace ThangVN
                 }
             }
         }
+
+
     }
 
 }
