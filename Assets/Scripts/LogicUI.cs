@@ -20,7 +20,7 @@ namespace ThangVN
         }
       
         public void ReplayGame()
-        {
+        {   
             SceneManager.LoadScene("SceneGameTapMatch");
         }
 
